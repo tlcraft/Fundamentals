@@ -38,44 +38,89 @@ namespace Heap
 
         public void Pop(int value)
         {
-            Downheap(value);
-        }
-
-        private void Upheap(ref Node parentNode, Node newNode)
-        {
-            //Min Heap
-            if (parentNode.Value > newNode.Value)
+            if (this.Root.Value == value)
             {
-                //set newNode as parent
-                Node temp = new Node(parentNode.Value, parentNode.LeftNode, parentNode.RightNode);
-                parentNode = newNode;
-                parentNode.LeftNode = temp.LeftNode;
-                parentNode.RightNode = temp.RightNode;
-                temp.LeftNode = null;
-                temp.RightNode = null;
-
-                //pass in parent to upheap
-                Upheap(ref parentNode, temp);
+                //remove root
+                //grab rightmost node on lowest level
+                //replace this node as parent
+                //downheap(root)
             }
-            else if (parentNode.LeftNode == null)
+            else if (this.Root.Left.Value >= value)
             {
-                parentNode.LeftNode = newNode;
-            }
-            else if (parentNode.RightNode == null)
-            {
-                parentNode.RightNode = newNode;
+                //pop(left, value)
             }
             else
             {
-                Node leftChild = parentNode.LeftNode;
-                Upheap(ref leftChild, newNode);
-                parentNode.LeftNode = leftChild;
+                //pop(right, value);
             }
         }
 
-        private void Downheap(int value)
+        private void Upheap(ref Node parent, Node newNode)
         {
-            throw new NotImplementedException();
+            //Min Heap
+            if (parent.Value > newNode.Value)
+            {
+                //set newNode as parent
+                Node temp = new Node(parent.Value, parent.Left, parent.Right);
+                parent = newNode;
+                parent.Left = temp.Left;
+                parent.Right = temp.Right;
+                temp.Left = null;
+                temp.Right = null;
+
+                //pass in parent to upheap
+                Upheap(ref parent, temp);
+            }
+            else if (parent.Left == null)
+            {
+                parent.Left = newNode;
+            }
+            else if (parent.Right == null)
+            {
+                parent.Right = newNode;
+            }
+            else
+            {
+                Node left = parent.Left;
+                Upheap(ref left, newNode);
+                parent.Left = left;
+            }
+        }
+
+        private void Downheap(Node parent)
+        {
+            if (parent != null)
+            {
+                int parentValue = parent.Value;
+                int leftValue = parent.Left?.Value ?? 0;
+                int rightValue = parent.Right?.Value ?? 0;
+
+                if (parentValue > leftValue || parentValue > rightValue)
+                {
+                    if (leftValue >= rightValue)
+                    {
+                        //replace right
+                        Node right = parent.Right;
+                        Node temp = new Node(right.Value, right.Left, right.Right);
+                        right.Left = parent.Left;
+                        right.Right = parent;
+                        parent.Left = temp.Left;
+                        parent.Right = temp.Right;
+                    }
+                    else
+                    {
+                        //replace left
+                        Node left = parent.Left;
+                        Node temp = new Node(left.Value, left.Left, left.Right);
+                        left.Left = parent;
+                        left.Right = parent.Right;
+                        parent.Left = temp.Left;
+                        parent.Right = temp.Right;
+                    }
+
+                    Downheap(parent);
+                }
+            }
         }
 
         public Node Root
@@ -112,9 +157,9 @@ namespace Heap
         {
             if (currentNode != null)
             {
-                if (currentNode.LeftNode != null)
+                if (currentNode.Left != null)
                 {
-                    InOrder(currentNode.LeftNode, tree);
+                    InOrder(currentNode.Left, tree);
                 }
 
                 if (tree.Length > 0)
@@ -124,9 +169,9 @@ namespace Heap
 
                 tree.Append(currentNode.Value.ToString());
 
-                if (currentNode.RightNode != null)
+                if (currentNode.Right != null)
                 {
-                    InOrder(currentNode.RightNode, tree);
+                    InOrder(currentNode.Right, tree);
                 }
             }
         }
@@ -135,14 +180,14 @@ namespace Heap
         {
             if (currentNode != null)
             {
-                if (currentNode.LeftNode != null)
+                if (currentNode.Left != null)
                 {
-                    PostOrder(currentNode.LeftNode, tree);
+                    PostOrder(currentNode.Left, tree);
                 }
 
-                if (currentNode.RightNode != null)
+                if (currentNode.Right != null)
                 {
-                    PostOrder(currentNode.RightNode, tree);
+                    PostOrder(currentNode.Right, tree);
                 }
                 
                 if (tree.Length > 0)
@@ -165,14 +210,14 @@ namespace Heap
 
                 tree.Append(currentNode.Value.ToString());
 
-                if (currentNode.LeftNode != null)
+                if (currentNode.Left != null)
                 {
-                    PreOrder(currentNode.LeftNode, tree);
+                    PreOrder(currentNode.Left, tree);
                 }
 
-                if (currentNode.RightNode != null)
+                if (currentNode.Right != null)
                 {
-                    PreOrder(currentNode.RightNode, tree);
+                    PreOrder(currentNode.Right, tree);
                 }
             }
         }

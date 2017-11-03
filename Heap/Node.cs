@@ -5,17 +5,17 @@
         public Node(int value, Node left = null, Node right = null)
         {
             this.Value = value;
-            this.LeftNode = left;
-            this.RightNode = right;
+            this.Left = left;
+            this.Right = right;
         }
 
-        public Node LeftNode
+        public Node Left
         {
             get;
             set;
         } = null;
 
-        public Node RightNode
+        public Node Right
         {
             get;
             set;
