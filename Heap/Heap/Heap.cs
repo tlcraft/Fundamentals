@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using static Heap.Enums;
+using System.Collections.Generic;
 
 namespace Heap
 {
@@ -20,21 +21,61 @@ namespace Heap
 
         #endregion Constructors
 
+        #region Properties
+
+        public Node Root
+        {
+            get;
+            set;
+        } = null;
+
+        private Queue<Node> Queue
+        {
+            get;
+            set;
+        } = new Queue<Node>();
+
+        #endregion Properties
+
         public void Push(int value)
         {
             Node newNode = new Node(value);
 
-            if (this.Root == null)
+            Queue.Clear();
+
+            Node root = this.Root;
+            Push(ref root, newNode);
+            this.Root = root;
+
+            Queue.Clear();
+        }
+
+        private void Push(ref Node current, Node newNode)
+        {
+            if (current == null)
             {
-                this.Root = newNode;
+                current = newNode;
+                //upheap();  need reference to parents
+            }
+            else if (current.Left == null)
+            {
+                current.Left = newNode;
+                //upheap();
+            }
+            else if (current.Right == null)
+            {
+                current.Right = newNode;
+                //upheap();
             }
             else
             {
-                Node root = this.Root;
-                Upheap(ref root, newNode);
-                this.Root = root;
+                Queue.Enqueue(current.Left);
+                Queue.Enqueue(current.Right);
+
+                Node nextCheck = Queue.Dequeue();
+                Push(ref nextCheck, newNode);
             }
-        }
+        }        
 
         public void Pop(int value)
         {
@@ -45,13 +86,24 @@ namespace Heap
                 //replace this node as parent
                 //downheap(root)
             }
-            else if (this.Root.Left.Value >= value)
-            {
-                //pop(left, value)
-            }
             else
             {
-                //pop(right, value);
+                Pop(this.Root, value);
+            }
+        }
+
+        private void Pop(Node current, int value)
+        {
+            if (current.Value == value)
+            {
+                if (this.Root.Left.Value >= value)
+                {
+                    //pop(left, value)
+                }
+                else
+                {
+                    //pop(right, value);
+                }
             }
         }
 
@@ -122,14 +174,8 @@ namespace Heap
                 }
             }
         }
-
-        public Node Root
-        {
-            get;
-            set;
-        } = null;
-
-        #region PrintTree
+        
+        #region Print Heap
 
         public string ToString(PrintOrder orderBy)
         {
@@ -222,6 +268,6 @@ namespace Heap
             }
         }
 
-        #endregion PrintTree
+        #endregion Print Heap
     }
 }
