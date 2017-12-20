@@ -5,16 +5,16 @@ using System.Collections.Generic;
 
 namespace Heap
 {
-    public class Heap
+    public class NodeHeap : IHeap
     {
         #region Constructors
 
-        public Heap()
+        public NodeHeap()
         {
 
         }
 
-        public Heap(Node root)
+        public NodeHeap(Node root)
         {
             this.Root = root;
         }

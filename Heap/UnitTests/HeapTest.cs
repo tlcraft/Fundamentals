@@ -21,12 +21,12 @@ namespace UnitTests
         string inOrderTraversal = "7 3 8 1 9 4 0 5 2 6";
         string preOrderTraversal = "0 1 3 7 8 4 9 2 5 6";
         string postOrderTraversal = "7 8 3 9 4 1 5 6 2 0";
-        Heap.Heap heap;
+        Heap.NodeHeap heap;
 
         [TestInitialize]
         public void Initialize()
         {
-            heap = new Heap.Heap();
+            heap = new Heap.NodeHeap();
             for (int i = 0; i < 10; i++)
             {
                 heap.Push(i);

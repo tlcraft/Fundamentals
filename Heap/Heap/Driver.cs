@@ -9,7 +9,7 @@ namespace Heap
         {
             // Let's create a Heap data structure
             // http://www.cprogramming.com/tutorial/computersciencetheory/heap.html
-            Heap heap = new Heap();
+            NodeHeap heap = new NodeHeap();
 
             // Add some nodes
             heap.Push(5);
