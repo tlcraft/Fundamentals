@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Heap
 {
-    public class NodeHeap : IHeap
+    public class NodeHeap
     {
         #region Constructors
 
