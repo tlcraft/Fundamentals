@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Heap
 {
-    public class NodeHeap
+    public class NodeHeap : IHeap
     {
         #region Constructors
 
@@ -23,11 +23,11 @@ namespace Heap
 
         #region Properties
 
-        public Node Root
+        private int ElementCount
         {
             get;
             set;
-        } = null;
+        } = 0;
 
         private Queue<Node> Queue
         {
@@ -35,10 +35,30 @@ namespace Heap
             set;
         } = new Queue<Node>();
 
+        private Node Root
+        {
+            get;
+            set;
+        } = null;
+
+
         #endregion Properties
 
+
+        public int Count()
+        {
+            return ElementCount;
+        }
+
+        public int Peek()
+        {
+            return this.Root.Value;
+        }
+        
         public void Push(int value)
         {
+            ElementCount++;
+
             Node newNode = new Node(value);
 
             Queue.Clear();
@@ -77,19 +97,19 @@ namespace Heap
             }
         }        
 
-        public void Pop(int value)
+        public int Pop()
         {
-            if (this.Root.Value == value)
-            {
-                //remove root
-                //grab rightmost node on lowest level
-                //replace this node as parent
-                //downheap(root)
-            }
-            else
-            {
-                Pop(this.Root, value);
-            }
+            ElementCount--;
+            int root = this.Root.Value;
+
+            //remove root
+            //grab rightmost node on lowest level
+            //replace this node as parent
+            //downheap(root)
+
+            //Pop(this.Root);
+
+            return root;
         }
 
         private void Pop(Node current, int value)
@@ -177,7 +197,7 @@ namespace Heap
         
         #region Print Heap
 
-        public string ToString(PrintOrder orderBy)
+        public string PrintHeap(PrintOrder orderBy)
         {
             StringBuilder tree = new StringBuilder();
 

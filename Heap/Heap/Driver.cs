@@ -7,8 +7,7 @@ namespace Heap
     {
         static void Main(string[] args)
         {
-            // Let's create a Heap data structure
-            // http://www.cprogramming.com/tutorial/computersciencetheory/heap.html
+            // Node Heap
             NodeHeap heap = new NodeHeap();
 
             // Add some nodes
@@ -19,9 +18,9 @@ namespace Heap
             heap.Push(1);
 
             // Print heap tree
-            Console.WriteLine("PreOrder: " + heap.ToString(PrintOrder.PreOrder));
-            Console.WriteLine("InOrder: " + heap.ToString(PrintOrder.InOrder));
-            Console.WriteLine("PostOrder: " + heap.ToString(PrintOrder.PostOrder));
+            Console.WriteLine("PreOrder: " + heap.PrintHeap(PrintOrder.PreOrder));
+            Console.WriteLine("InOrder: " + heap.PrintHeap(PrintOrder.InOrder));
+            Console.WriteLine("PostOrder: " + heap.PrintHeap(PrintOrder.PostOrder));
 
             // Remove a couple nodes
             //heap.Pop(7);

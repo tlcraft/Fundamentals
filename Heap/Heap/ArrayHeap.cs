@@ -6,64 +6,128 @@ using System.Threading.Tasks;
 
 namespace Heap
 {
-    class ArrayHeap : IHeap
+    public class ArrayHeap : IHeap
     {
-        public Node Root
+        private int?[] Heap
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
+        } = new int?[10];
 
-            set
-            {
-                throw new NotImplementedException();
-            }
+        private Queue<int?> Queue
+        {
+            get;
+            set;
+        } = new Queue<int?>();
+
+        private int ElementCount
+        {
+            get;
+            set;
         }
 
-        public void Downheap(Node parent)
+        #region Heap Interface
+
+        public int Count()
         {
-            throw new NotImplementedException();
+            return ElementCount;
         }
 
-        public void InOrder(Node currentNode, StringBuilder tree)
+        public int Peek()
         {
-            throw new NotImplementedException();
+            return (Heap[0] != null) ? (int)Heap[0] : 0;
         }
 
-        public void Pop(int value)
+        public int Pop()
         {
-            throw new NotImplementedException();
-        }
-
-        public void Pop(Node current, int value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PostOrder(Node currentNode, StringBuilder tree)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PreOrder(Node currentNode, StringBuilder tree)
-        {
+            ElementCount--;
             throw new NotImplementedException();
         }
 
         public void Push(int value)
         {
-            throw new NotImplementedException();
+            ElementCount++;
+
+            Queue.Clear();
+
+            Push(0, value);
+
+            Queue.Clear();
         }
 
-        public string ToString(Enums.PrintOrder orderBy)
+        private void Push(int index, int value)
+        {
+            // TODO: Grab index and compare to size of array, increase if necessary
+            // GrowHeap()
+
+            if (Heap[index] == null)
+            {
+                Heap[index] = value;
+            }
+            else
+            {
+                int left = (2 * index) + 1;
+                int right = left + 1;
+                if (Heap[left] == null)
+                {
+                    Heap[left] = value;
+                }
+                else if (Heap[right] == null)
+                {
+                    Heap[right] = value;
+                }
+                else
+                {
+                    Queue.Enqueue(left);
+                    Queue.Enqueue(right);
+
+                    int? nextCheck = Queue.Dequeue();
+                    if (nextCheck != null && nextCheck >= 0)
+                    {
+                        Push((int)nextCheck, value);
+                    }
+                }
+            }
+        }
+
+        #endregion Heap Interface
+
+        private void GrowHeap()
+        {
+            int currentSize = Heap.Length;
+
+            int?[] newHeap = new int?[currentSize * 2];
+
+            for(int i = 0; i < currentSize; i++)
+            {
+                newHeap[i] = Heap[i];
+            }
+
+            Heap = newHeap;
+        }
+
+        #region Print Heap
+
+        public string PrintHeap(Enums.PrintOrder orderBy)
         {
             throw new NotImplementedException();
         }
 
-        public void Upheap(ref Node parent, Node newNode)
+        private void InOrder()
         {
             throw new NotImplementedException();
         }
+
+        private void PostOrder()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void PreOrder()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion Print Heap
     }
 }

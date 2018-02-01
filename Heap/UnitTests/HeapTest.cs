@@ -22,41 +22,63 @@ namespace UnitTests
         string preOrderTraversal = "0 1 3 7 8 4 9 2 5 6";
         string postOrderTraversal = "7 8 3 9 4 1 5 6 2 0";
         Heap.NodeHeap heap;
+        Heap.ArrayHeap arrayHeap;
 
         [TestInitialize]
         public void Initialize()
         {
             heap = new Heap.NodeHeap();
+            arrayHeap = new ArrayHeap();
+
             for (int i = 0; i < 10; i++)
             {
                 heap.Push(i);
+                arrayHeap.Push(i);
             }
         }
 
         [TestMethod]
-        public void PushTest()
+        public void NodeHeap_CountCheck()
         {
-            Assert.IsTrue(heap.Root.Value == 0, "This is not a min heap");
+            Assert.IsTrue(heap.Count() == 10, "The size of the heap is wrong");
         }
 
         [TestMethod]
-        public void InOrderTest()
+        public void ArrayHeap_CountCheck()
         {
-            string inOrder = heap.ToString(Enums.PrintOrder.InOrder);
+            Assert.IsTrue(arrayHeap.Count() == 10, "The size of the heap is wrong");
+        }
+
+        [TestMethod]
+        public void NodeHeap_PushTest()
+        {
+            Assert.IsTrue(heap.Peek() == 0, "This is not a min heap");
+        }
+
+        [TestMethod]
+        public void ArrayHeap_PushTest()
+        {
+            Assert.IsTrue(arrayHeap.Peek() == 0, "This is not a min heap");
+        }
+
+        [TestMethod]
+        public void NodeHeap_InOrderTest()
+        {
+            string inOrder = heap.PrintHeap(Enums.PrintOrder.InOrder);
             Assert.IsTrue(inOrderTraversal == inOrder, "The in order traversal was wrong: " + inOrderTraversal + " != " + inOrder);
         }
 
         [TestMethod]
-        public void PreOrderTest()
+        public void NodeHeap_PreOrderTest()
         {
-            string preOrder = heap.ToString(Enums.PrintOrder.PreOrder);
+            string preOrder = heap.PrintHeap(Enums.PrintOrder.PreOrder);
             Assert.IsTrue(preOrderTraversal == preOrder, "The pre order traversal was wrong: " + preOrderTraversal + " != " + preOrder);
         }
 
         [TestMethod]
-        public void PostOrderTest()
+        public void NodeHeap_PostOrderTest()
         {
-            string postOrder = heap.ToString(Enums.PrintOrder.PostOrder);
+            string postOrder = heap.PrintHeap(Enums.PrintOrder.PostOrder);
             Assert.IsTrue(postOrderTraversal == postOrder, "The post order traversal was wrong: " + postOrderTraversal + " != " + postOrder);
         }
     }
