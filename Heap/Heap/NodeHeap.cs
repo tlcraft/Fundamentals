@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Heap
 {
+    /// <summary>
+    /// This class represents a min heap object implemented with Nodes
+    /// </summary>
     public class NodeHeap : IHeap
     {
         #region Constructors
@@ -14,9 +17,11 @@ namespace Heap
 
         }
 
-        public NodeHeap(Node root)
+        public NodeHeap(int value)
         {
+            Node root = new Heap.Node(value, null);
             this.Root = root;
+            ElementCount++;
         }
 
         #endregion Constructors
@@ -41,9 +46,9 @@ namespace Heap
             set;
         } = null;
 
-
         #endregion Properties
 
+        #region Heap Interface
 
         public int Count()
         {
@@ -55,107 +60,243 @@ namespace Heap
             return this.Root.Value;
         }
         
+        public int Pop()
+        {
+            ElementCount--;
+            int root = this.Root.Value;
+
+            Node newRoot = RightMostNode();
+
+            if (newRoot != null)
+            {
+                this.Root.Value = newRoot.Value;
+                UpdateParentChildReference(newRoot);
+                newRoot = null;
+
+                Downheap(this.Root);
+            }
+
+            return root;
+        }
+
         public void Push(int value)
         {
             ElementCount++;
 
-            Node newNode = new Node(value);
+            Node newNode = new Node(value, null);
 
             Queue.Clear();
 
             Node root = this.Root;
             Push(ref root, newNode);
-            this.Root = root;
+            Upheap(ref newNode);
+            SetRoot(newNode);
 
             Queue.Clear();
         }
+
+        #endregion Heap Interface
 
         private void Push(ref Node current, Node newNode)
         {
             if (current == null)
             {
                 current = newNode;
-                //upheap();  need reference to parents
             }
             else if (current.Left == null)
             {
                 current.Left = newNode;
-                //upheap();
+                newNode.Parent = current;
             }
             else if (current.Right == null)
             {
                 current.Right = newNode;
-                //upheap();
+                newNode.Parent = current;
             }
             else
             {
-                Queue.Enqueue(current.Left);
-                Queue.Enqueue(current.Right);
+                EnqueueChildren(current);
 
                 Node nextCheck = Queue.Dequeue();
                 Push(ref nextCheck, newNode);
             }
-        }        
-
-        public int Pop()
-        {
-            ElementCount--;
-            int root = this.Root.Value;
-
-            //remove root
-            //grab rightmost node on lowest level
-            //replace this node as parent
-            //downheap(root)
-
-            //Pop(this.Root);
-
-            return root;
         }
 
-        private void Pop(Node current, int value)
+        private void SetRoot(Node node)
         {
-            if (current.Value == value)
+            while (node.Parent != null)
             {
-                if (this.Root.Left.Value >= value)
-                {
-                    //pop(left, value)
-                }
-                else
-                {
-                    //pop(right, value);
-                }
+                node = node.Parent;
+            }
+
+            this.Root = node;
+        }
+
+        private Node RightMostNode()
+        {
+            if (this.Root == null)
+            {
+                return null;
+            }
+
+            Node rightMost = this.Root;
+
+            Queue.Clear();
+
+            EnqueueChildren(this.Root);
+            RightMostNode(ref rightMost);
+
+            Queue.Clear();
+
+            return rightMost;
+        }
+
+        private void RightMostNode(ref Node rightMost)
+        {
+            Node current = null;
+
+            current = Queue.Dequeue();
+            while (current != null)
+            {
+                rightMost = current;
+                EnqueueChildren(current);
             }
         }
 
-        private void Upheap(ref Node parent, Node newNode)
-        {
-            //Min Heap
-            if (parent.Value > newNode.Value)
-            {
-                //set newNode as parent
-                Node temp = new Node(parent.Value, parent.Left, parent.Right);
-                parent = newNode;
-                parent.Left = temp.Left;
-                parent.Right = temp.Right;
-                temp.Left = null;
-                temp.Right = null;
 
-                //pass in parent to upheap
-                Upheap(ref parent, temp);
-            }
-            else if (parent.Left == null)
+        private void EnqueueChildren(Node node)
+        {
+            Queue.Enqueue(node.Left);
+            Queue.Enqueue(node.Right);
+        }
+
+        private bool UpdateParentChildReference(Node node)
+        {
+            Node parent = node.Parent;
+            bool isSuccessful = false;
+
+            if (parent != null)
             {
-                parent.Left = newNode;
+                if (parent.Left == node)
+                {
+                    parent.Left = null;
+                    isSuccessful = true;
+                }
+                else if (parent.Right == node)
+                {
+                    parent.Right = null;
+                    isSuccessful = true;
+                }
             }
-            else if (parent.Right == null)
+            else // Root Node
             {
-                parent.Right = newNode;
+                isSuccessful = true;
+            }
+
+            return isSuccessful;
+        }
+
+        private bool UpdateTopParentChildReference(ref Node newChild, ref Node oldChild)
+        {
+            bool isSuccessful = true;
+
+            Node topParent = newChild.Parent;
+            int childValue = oldChild.Value;
+            Node replacement = newChild;
+
+            if (topParent == null)
+            {
+                // At root
+            }
+            else if (topParent.Left.Value == childValue)
+            {
+                topParent.Left = replacement;
+            }
+            else if (topParent.Right.Value == childValue)
+            {
+                topParent.Right = replacement;
             }
             else
             {
-                Node left = parent.Left;
-                Upheap(ref left, newNode);
-                parent.Left = left;
+                isSuccessful = false;
+            }
+
+            return isSuccessful;
+        }
+
+        private void Upheap(ref Node newNode)
+        {
+            if (newNode != null)
+            {
+                Node parent = newNode.Parent;
+
+                if (parent != null)
+                {
+                    //Min Heap
+                    if (parent.Value > newNode.Value)
+                    {
+                        //set newNode as parent
+                        Node temp = new Node(parent.Value, parent.Parent, parent.Left, parent.Right);
+                        Node tempLeft = newNode.Left;
+                        Node tempRight = newNode.Right;
+
+                        parent = newNode;
+
+                        if (temp.Left == newNode)
+                        {
+                            parent.Left = temp;
+                            parent.Parent = temp.Parent;
+
+                            UpdateTopParentChildReference(ref parent, ref temp);
+
+                            parent.Right = temp.Right;
+                            temp.Parent = parent;
+                        }
+                        else
+                        {
+                            parent.Left = temp.Left;
+                            if (parent.Left != null)
+                            {
+                                parent.Left.Parent = parent;
+                            }
+                        }
+
+                        if (temp.Right == newNode)
+                        {
+                            parent.Right = temp;
+                            parent.Parent = temp.Parent;
+
+                            UpdateTopParentChildReference(ref parent, ref temp);
+
+                            parent.Left = temp.Left;
+                            temp.Parent = parent;
+                        }
+                        else
+                        {
+                            parent.Right = temp.Right;
+                            if (parent.Right != null)
+                            {
+                                parent.Right.Parent = parent;
+                            }
+                        }
+                        
+                        temp.Left = tempLeft;
+                        temp.Right = tempRight;
+
+                        if (tempLeft != null)
+                        {
+                            tempLeft.Parent = temp;
+                        }
+
+                        if (tempRight != null)
+                        {
+                            tempRight.Parent = temp;
+                        }
+                        
+                        // Continue up the heap
+                        Upheap(ref parent);
+                    }
+                }
             }
         }
 
@@ -166,14 +307,15 @@ namespace Heap
                 int parentValue = parent.Value;
                 int leftValue = parent.Left?.Value ?? 0;
                 int rightValue = parent.Right?.Value ?? 0;
+                Node right, left, temp;
 
-                if (parentValue > leftValue || parentValue > rightValue)
+                while (parentValue > leftValue || parentValue > rightValue)
                 {
                     if (leftValue >= rightValue)
                     {
                         //replace right
-                        Node right = parent.Right;
-                        Node temp = new Node(right.Value, right.Left, right.Right);
+                        right = parent.Right;
+                        temp = new Node(right.Value, right.Parent, right.Left, right.Right);
                         right.Left = parent.Left;
                         right.Right = parent;
                         parent.Left = temp.Left;
@@ -182,15 +324,16 @@ namespace Heap
                     else
                     {
                         //replace left
-                        Node left = parent.Left;
-                        Node temp = new Node(left.Value, left.Left, left.Right);
+                        left = parent.Left;
+                        temp = new Node(left.Value, left.Parent, left.Left, left.Right);
                         left.Left = parent;
                         left.Right = parent.Right;
                         parent.Left = temp.Left;
                         parent.Right = temp.Right;
                     }
 
-                    Downheap(parent);
+                    leftValue = parent.Left?.Value ?? 0;
+                    rightValue = parent.Right?.Value ?? 0;
                 }
             }
         }

@@ -2,11 +2,12 @@
 {
     public class Node
     {
-        public Node(int value, Node left = null, Node right = null)
+        public Node(int value, Node parent, Node left = null, Node right = null)
         {
             this.Value = value;
             this.Left = left;
             this.Right = right;
+            this.Parent = parent;
         }
 
         public Node Left
@@ -16,6 +17,12 @@
         } = null;
 
         public Node Right
+        {
+            get;
+            set;
+        } = null;
+
+        public Node Parent
         {
             get;
             set;

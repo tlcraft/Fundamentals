@@ -6,13 +6,34 @@ using System.Threading.Tasks;
 
 namespace Heap
 {
+    /// <summary>
+    /// This class represents a min heap object implemented with an integer array
+    /// </summary>
     public class ArrayHeap : IHeap
     {
+        #region Constructors
+
+        public ArrayHeap()
+        {
+
+        }
+
+        public ArrayHeap(int value)
+        {
+            if (Heap != null)
+            {
+                Heap[0] = value;
+                ElementCount++;
+            }
+        }
+
+        #endregion Constructors
+
         private int?[] Heap
         {
             get;
             set;
-        } = new int?[10];
+        } = new int?[5];
 
         private Queue<int?> Queue
         {
@@ -38,6 +59,7 @@ namespace Heap
             return (Heap[0] != null) ? (int)Heap[0] : 0;
         }
 
+        //TODO Complete Pop method
         public int Pop()
         {
             ElementCount--;
@@ -57,8 +79,10 @@ namespace Heap
 
         private void Push(int index, int value)
         {
-            // TODO: Grab index and compare to size of array, increase if necessary
-            // GrowHeap()
+            if (index >= Heap.Length)
+            {
+                GrowHeap();
+            }
 
             if (Heap[index] == null)
             {
@@ -68,6 +92,12 @@ namespace Heap
             {
                 int left = (2 * index) + 1;
                 int right = left + 1;
+
+                if (left >= Heap.Length || right >= Heap.Length)
+                {
+                    GrowHeap();
+                }
+
                 if (Heap[left] == null)
                 {
                     Heap[left] = value;
@@ -108,6 +138,7 @@ namespace Heap
 
         #region Print Heap
 
+        //TODO Implement array traversals
         public string PrintHeap(Enums.PrintOrder orderBy)
         {
             throw new NotImplementedException();

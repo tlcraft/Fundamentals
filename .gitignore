@@ -6,6 +6,7 @@
 *.exe
 *.o
 *.so
+**/AssemblyInfo.cs
 
 # Project Files #
 #################
@@ -15,6 +16,9 @@ obj/
 *.csproj
 *.sln
 *.userprefs
+*.config
+*.suo
+
 
 # Packages #
 ############
