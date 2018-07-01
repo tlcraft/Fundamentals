@@ -31,8 +31,8 @@ namespace Heap
             PrintHeap(heap);
 
             // Remove a couple nodes
-            //heap.Pop();
-            //heap.Pop();
+            heap.Pop();
+            heap.Pop();
 
             Console.WriteLine();
 

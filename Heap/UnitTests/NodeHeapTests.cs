@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTests
 {
     [TestClass]
-    public class HeapTest
+    public class NodeHeapTests
     {
         // Min Heap after adding values 0 to 9
         //         0
@@ -22,18 +22,7 @@ namespace UnitTests
         string preOrderTraversal = "0 1 3 7 8 4 9 2 5 6";
         string postOrderTraversal = "7 8 3 9 4 1 5 6 2 0";
         Heap.NodeHeap nodeHeap;
-        Heap.ArrayHeap arrayHeap;
         const int iterations = 10;
-
-        public void InitializeArrayHeap()
-        {
-            arrayHeap = new ArrayHeap();
-
-            for (int i = 0; i < iterations; i++)
-            {
-                arrayHeap.Push(i);
-            }
-        }
 
         public void InitializeNodeHeap()
         {
@@ -45,12 +34,6 @@ namespace UnitTests
             }
         }
 
-        public void InitializeHeaps()
-        {
-            InitializeArrayHeap();
-            InitializeNodeHeap();
-        }
-
         [TestMethod]
         public void NodeHeap_SimpleCountCheck()
         {
@@ -58,15 +41,7 @@ namespace UnitTests
             int count = nodeHeap.Count();
             Assert.AreEqual(iterations, count, $"The count of the heap is wrong. Expected count of {iterations}. Actual {count}.");
         }
-
-        [TestMethod]
-        public void ArrayHeap_SimpleCountCheck()
-        {
-            InitializeArrayHeap();
-            int count = arrayHeap.Count();
-            Assert.AreEqual(iterations, count, $"The count of the heap is wrong. Expected count of {iterations}. Actual {count}.");
-        }
-
+        
         [TestMethod]
         public void NodeHeap_SimplePeek()
         {
@@ -81,6 +56,23 @@ namespace UnitTests
             InitializeNodeHeap();
             int rootValue = nodeHeap.Pop();
             Assert.AreEqual(0, rootValue, $"This is not a min heap. Expected value of 0. Actual {rootValue}.");
+        }
+
+        [TestMethod]
+        public void NodeHeap_MultiplePop()
+        {
+            InitializeNodeHeap();
+            int rootValue = nodeHeap.Pop();
+            Assert.AreEqual(0, rootValue, $"This is not a min heap. Expected value of 0. Actual {rootValue}.");
+
+            rootValue = nodeHeap.Pop();
+            Assert.AreEqual(1, rootValue, $"This is not a min heap. Expected value of 1. Actual {rootValue}.");
+
+            rootValue = nodeHeap.Pop();
+            Assert.AreEqual(2, rootValue, $"This is not a min heap. Expected value of 2. Actual {rootValue}.");
+
+            rootValue = nodeHeap.Pop();
+            Assert.AreEqual(3, rootValue, $"This is not a min heap. Expected value of 3. Actual {rootValue}.");
         }
 
         [TestMethod]
@@ -107,6 +99,29 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void NodeHeap_MulitplePopInOrderTraversal()
+        {
+            InitializeNodeHeap();
+            int rootValue = nodeHeap.Pop();
+            Assert.AreEqual(0, rootValue, $"This is not a min heap. Excepted value of 0. Actual {rootValue}.");
+            nodeHeap.Pop();
+            nodeHeap.Pop();
+
+            string inOrder = nodeHeap.PrintHeap(Enums.PrintOrder.InOrder);
+
+            // New Min Heap
+            //         3
+            //        / \
+            //       4    5
+            //      / \  / \
+            //     7   9 8  6
+            //
+            // In Order: 7 4 9 3 8 5 6
+            inOrderTraversal = "7 4 9 3 8 5 6";
+            Assert.AreEqual(inOrderTraversal, inOrder, $"The in order traversal was wrong: {inOrderTraversal} != {inOrder}.");
+        }
+
+        [TestMethod]
         public void NodeHeap_MinHeap()
         {
             Heap.NodeHeap heap = new NodeHeap(10);
@@ -120,15 +135,7 @@ namespace UnitTests
             int peekValue = heap.Peek();
             Assert.AreEqual(2, peekValue, $"This is not a min heap. peekValue = {peekValue}.");
         }
-
-        [TestMethod]
-        public void ArrayHeap_SimplePeek()
-        {
-            InitializeArrayHeap();
-            int peekValue = arrayHeap.Peek();
-            Assert.AreEqual(0, peekValue, $"This is not a min heap. peekValue = {peekValue}.");
-        }
-
+        
         [TestMethod]
         public void NodeHeap_InOrder()
         {
@@ -208,21 +215,6 @@ namespace UnitTests
 
             string preOrder = heap.PrintHeap(Enums.PrintOrder.PreOrder);
             Assert.AreEqual(preOrderTraversal, preOrder, $"The post order traversal was wrong: {preOrderTraversal} != {preOrder}.");           
-        }
-
-        [TestMethod]
-        public void ArrayHeap_Count()
-        {
-            Heap.ArrayHeap heap = new ArrayHeap(10);
-            Assert.AreEqual(1, heap.Count(), $"The count is off, expected 1. {heap.Count()}");
-
-            heap.Push(15);
-            heap.Push(25);
-            heap.Push(20);
-            heap.Push(35);
-            heap.Push(14);
-
-            Assert.AreEqual(6, heap.Count(), $"The count is off, expected 6. {heap.Count()}");
         }
     }
 }
