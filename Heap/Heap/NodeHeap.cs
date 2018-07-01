@@ -71,7 +71,6 @@ namespace Heap
             {
                 this.Root.Value = newRoot.Value;
                 UpdateParentChildReference(newRoot);
-                newRoot = null;
 
                 Downheap(this.Root);
             }
@@ -160,9 +159,9 @@ namespace Heap
             {
                 rightMost = current;
                 EnqueueChildren(current);
+                current = Queue.Dequeue();
             }
         }
-
 
         private void EnqueueChildren(Node node)
         {
@@ -305,35 +304,43 @@ namespace Heap
             if (parent != null)
             {
                 int parentValue = parent.Value;
-                int leftValue = parent.Left?.Value ?? 0;
-                int rightValue = parent.Right?.Value ?? 0;
-                Node right, left, temp;
+                int? leftValue = parent.Left?.Value ?? null;
+                int? rightValue = parent.Right?.Value ?? null;
+                int temp;
+                bool hasNode = (leftValue != null || rightValue != null);
+                bool swapRight = false;
 
-                while (parentValue > leftValue || parentValue > rightValue)
+                while (hasNode && ((leftValue != null && parentValue > leftValue) || ((rightValue != null && parentValue > rightValue))))
                 {
-                    if (leftValue >= rightValue)
+                    if(((rightValue != null && leftValue != null) && (leftValue >= rightValue)) || (rightValue != null && leftValue == null))
                     {
-                        //replace right
-                        right = parent.Right;
-                        temp = new Node(right.Value, right.Parent, right.Left, right.Right);
-                        right.Left = parent.Left;
-                        right.Right = parent;
-                        parent.Left = temp.Left;
-                        parent.Right = temp.Right;
+                        swapRight = true;
+                    }
+                    else if (((rightValue != null && leftValue != null) && (leftValue <= rightValue)) || (leftValue != null && rightValue == null))
+                    {
+                        swapRight = false;
+                    }
+
+                    if (swapRight)
+                    {
+                        //swap right
+                        temp = parent.Value;
+                        parent.Value = parent.Right.Value;
+                        parent.Right.Value = temp;
+                        parent = parent.Right;
                     }
                     else
                     {
-                        //replace left
-                        left = parent.Left;
-                        temp = new Node(left.Value, left.Parent, left.Left, left.Right);
-                        left.Left = parent;
-                        left.Right = parent.Right;
-                        parent.Left = temp.Left;
-                        parent.Right = temp.Right;
+                        //swap left
+                        temp = parent.Value;
+                        parent.Value = parent.Left.Value;
+                        parent.Left.Value = temp;
+                        parent = parent.Left;
                     }
 
-                    leftValue = parent.Left?.Value ?? 0;
-                    rightValue = parent.Right?.Value ?? 0;
+                    leftValue = parent.Left?.Value ?? null;
+                    rightValue = parent.Right?.Value ?? null;
+                    hasNode = (leftValue != null || rightValue != null);
                 }
             }
         }
