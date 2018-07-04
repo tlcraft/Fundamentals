@@ -122,6 +122,52 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void NodeHeap_MulitplePopPreOrderTraversal()
+        {
+            InitializeNodeHeap();
+            int rootValue = nodeHeap.Pop();
+            Assert.AreEqual(0, rootValue, $"This is not a min heap. Excepted value of 0. Actual {rootValue}.");
+            nodeHeap.Pop();
+            nodeHeap.Pop();
+
+            string preOrder = nodeHeap.PrintHeap(Enums.PrintOrder.PreOrder);
+
+            // New Min Heap
+            //         3
+            //        / \
+            //       4    5
+            //      / \  / \
+            //     7   9 8  6
+            //
+            // Pre Order: 7 4 9 3 8 5 6
+            preOrderTraversal = "3 4 7 9 5 8 6";
+            Assert.AreEqual(preOrderTraversal, preOrder, $"The pre order traversal was wrong: {preOrderTraversal} != {preOrder}.");
+        }
+
+        [TestMethod]
+        public void NodeHeap_MulitplePopPostOrderTraversal()
+        {
+            InitializeNodeHeap();
+            int rootValue = nodeHeap.Pop();
+            Assert.AreEqual(0, rootValue, $"This is not a min heap. Excepted value of 0. Actual {rootValue}.");
+            nodeHeap.Pop();
+            nodeHeap.Pop();
+
+            string postOrder = nodeHeap.PrintHeap(Enums.PrintOrder.PostOrder);
+
+            // New Min Heap
+            //         3
+            //        / \
+            //       4    5
+            //      / \  / \
+            //     7   9 8  6
+            //
+            // Post Order: 7 4 9 3 8 5 6
+            postOrderTraversal = "7 9 4 8 6 5 3";
+            Assert.AreEqual(postOrderTraversal, postOrder, $"The post order traversal was wrong: {postOrderTraversal} != {postOrder}.");
+        }
+
+        [TestMethod]
         public void NodeHeap_MinHeap()
         {
             Heap.NodeHeap heap = new NodeHeap(10);
