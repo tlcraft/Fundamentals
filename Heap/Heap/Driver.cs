@@ -34,6 +34,14 @@ namespace Heap
             heap.Pop();
             heap.Pop();
 
+            // New Min Heap
+            //         5
+            //        / \
+            //       7    20
+            //PreOrder: 5 7 20
+            //InOrder: 7 5 20
+            //PostOrder: 7 20 5
+
             Console.WriteLine();
 
             // Print heap tree
