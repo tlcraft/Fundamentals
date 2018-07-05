@@ -262,5 +262,53 @@ namespace UnitTests
             string preOrder = heap.PrintHeap(Enums.PrintOrder.PreOrder);
             Assert.AreEqual(preOrderTraversal, preOrder, $"The post order traversal was wrong: {preOrderTraversal} != {preOrder}.");           
         }
+
+        [TestMethod]
+        public void NodeHeap_InOrderMixedNodes()
+        {
+            Heap.NodeHeap heap = new NodeHeap(10);
+
+            heap.Push(15);
+            heap.Push(25);
+            heap.Push(20);
+            heap.Push(35);
+            heap.Push(14);
+            heap.Push(1);
+
+            // Min Heap
+            //         1
+            //        / \
+            //      15    10
+            //      / \   / \
+            //    20  35 25  14
+            inOrderTraversal = "20 15 35 1 25 10 14";
+
+            string inOrder = heap.PrintHeap(Enums.PrintOrder.InOrder);
+            Assert.AreEqual(inOrderTraversal, inOrder, $"The post order traversal was wrong: {inOrderTraversal} != {inOrder}.");
+        }
+
+        [TestMethod]
+        public void NodeHeap_PostOrderMixedNodes()
+        {
+            Heap.NodeHeap heap = new NodeHeap(10);
+
+            heap.Push(15);
+            heap.Push(25);
+            heap.Push(20);
+            heap.Push(35);
+            heap.Push(14);
+            heap.Push(1);
+
+            // Min Heap
+            //         1
+            //        / \
+            //      15    10
+            //      / \   / \
+            //    20  35 25  14
+            postOrderTraversal = "20 35 15 25 14 10 1";
+
+            string postOrder = heap.PrintHeap(Enums.PrintOrder.PostOrder);
+            Assert.AreEqual(postOrderTraversal, postOrder, $"The post order traversal was wrong: {postOrderTraversal} != {postOrder}.");
+        }
     }
 }
