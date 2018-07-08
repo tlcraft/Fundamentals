@@ -56,6 +56,14 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void ArrayHeap_SimplePop()
+        {
+            InitializeArrayHeap();
+            int popValue = arrayHeap.Pop();
+            Assert.AreEqual(0, popValue, $"This is not a min heap. popValue = {popValue}.");
+        }
+
+        [TestMethod]
         public void ArrayHeap_Count()
         {
             Heap.ArrayHeap heap = new ArrayHeap(10);
