@@ -14,8 +14,7 @@
 .vscode/
 bin/
 obj/
-*.csproj
-*.sln
+
 *.userprefs
 *.config
 *.suo
