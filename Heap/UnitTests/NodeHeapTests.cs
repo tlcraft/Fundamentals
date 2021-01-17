@@ -41,7 +41,7 @@ namespace UnitTests
             int count = nodeHeap.Count();
             Assert.AreEqual(iterations, count, $"The count of the heap is wrong. Expected count of {iterations}. Actual {count}.");
         }
-        
+
         [TestMethod]
         public void NodeHeap_SimplePeek()
         {
@@ -181,7 +181,7 @@ namespace UnitTests
             int peekValue = heap.Peek();
             Assert.AreEqual(2, peekValue, $"This is not a min heap. peekValue = {peekValue}.");
         }
-        
+
         [TestMethod]
         public void NodeHeap_InOrder()
         {
@@ -260,7 +260,7 @@ namespace UnitTests
             preOrderTraversal = "1 15 20 35 10 25 14";
 
             string preOrder = heap.PrintHeap(Enums.PrintOrder.PreOrder);
-            Assert.AreEqual(preOrderTraversal, preOrder, $"The post order traversal was wrong: {preOrderTraversal} != {preOrder}.");           
+            Assert.AreEqual(preOrderTraversal, preOrder, $"The post order traversal was wrong: {preOrderTraversal} != {preOrder}.");
         }
 
         [TestMethod]
