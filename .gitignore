@@ -10,11 +10,11 @@
 
 # Project Files #
 #################
+.vs
 .vscode/
 bin/
 obj/
-*.csproj
-*.sln
+
 *.userprefs
 *.config
 *.suo
